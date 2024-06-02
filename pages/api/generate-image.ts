@@ -54,21 +54,21 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    const { text } = req.body;
+    const { text, bgColor, textColor, font } = req.body;
 
     // Create a temporary canvas to measure text width
     const tempCanvas = createCanvas(0, 0);
     const tempCtx = tempCanvas.getContext("2d") as CanvasRenderingContext2D;
 
     // Set text properties for measurement
-    tempCtx.font = "24px sans-serif";
-    const maxWidth = 500;
+    tempCtx.font = `24px ${font}`;
+    const maxWidth = 300;
     const lines = wrapText(tempCtx, text, maxWidth);
 
     // Calculate the height based on the number of lines
     const lineHeight = 30; // Adjust as needed
     const textHeight = lines.length * lineHeight;
-    const padding = 20;
+    const padding = 25;
     const canvasHeight = textHeight + padding * 2;
 
     // Calculate the width based on the longest line
@@ -83,7 +83,7 @@ export default async function handler(
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 
     // Draw the background with a rounded rectangle and right-angled triangular top left corner
-    ctx.fillStyle = "#202C33"; // Blue color
+    ctx.fillStyle = bgColor;
     drawRoundedRectWithTriangle(
       ctx,
       10,
@@ -95,8 +95,8 @@ export default async function handler(
     ctx.fill();
 
     // Set text properties
-    ctx.font = "24px sans-serif";
-    ctx.fillStyle = "#ffffff";
+    ctx.font = `24px ${font}`;
+    ctx.fillStyle = textColor;
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
 
